@@ -11,7 +11,8 @@ import {
   GraduationCap, 
   Settings,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  LayoutDashboard
 } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -25,6 +26,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
   const pathname = location.pathname;
 
   const menuItems = [
+    { name: 'Dashboard', icon: LayoutDashboard, path: '/' },
     { name: 'Students', icon: Users, path: '/students' },
     { name: 'Teachers', icon: UserCog, path: '/teachers' },
     { name: 'Classes', icon: BookOpen, path: '/classes' },
