@@ -14,7 +14,7 @@ import {
   ChevronDown, 
   FileText,
   FileSpreadsheet,
-  FilePdf
+  File
 } from 'lucide-react';
 
 const StudentTableActions: React.FC = () => {
@@ -43,7 +43,7 @@ const StudentTableActions: React.FC = () => {
             Export as Excel
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <FilePdf className="h-4 w-4 mr-2" />
+            <File className="h-4 w-4 mr-2" />
             Export as PDF
           </DropdownMenuItem>
         </DropdownMenuContent>
