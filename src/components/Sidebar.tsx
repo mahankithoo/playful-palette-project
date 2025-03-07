@@ -13,6 +13,7 @@ import {
   ChevronLeft,
   ChevronRight
 } from 'lucide-react';
+import { Link, useLocation } from 'react-router-dom';
 
 interface SidebarProps {
   isOpen: boolean;
@@ -20,18 +21,19 @@ interface SidebarProps {
 }
 
 const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
-  const [activeItem, setActiveItem] = React.useState('Students');
+  const location = useLocation();
+  const pathname = location.pathname;
 
   const menuItems = [
-    { name: 'Students', icon: Users },
-    { name: 'Teachers', icon: UserCog },
-    { name: 'Classes', icon: BookOpen },
-    { name: 'Subjects', icon: BookText },
-    { name: 'Attendance', icon: CalendarCheck2 },
-    { name: 'Notices', icon: Bell },
-    { name: 'Events', icon: Calendar },
-    { name: 'Result', icon: GraduationCap },
-    { name: 'Settings', icon: Settings },
+    { name: 'Students', icon: Users, path: '/students' },
+    { name: 'Teachers', icon: UserCog, path: '/teachers' },
+    { name: 'Classes', icon: BookOpen, path: '/classes' },
+    { name: 'Subjects', icon: BookText, path: '/subjects' },
+    { name: 'Attendance', icon: CalendarCheck2, path: '/attendance' },
+    { name: 'Notices', icon: Bell, path: '/notices' },
+    { name: 'Events', icon: Calendar, path: '/events' },
+    { name: 'Result', icon: GraduationCap, path: '/results' },
+    { name: 'Settings', icon: Settings, path: '/settings' },
   ];
 
   return (
@@ -62,13 +64,13 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
         <ul className="space-y-1 px-2">
           {menuItems.map((item) => (
             <li key={item.name}>
-              <button
-                className={`sidebar-item w-full ${activeItem === item.name ? 'active' : ''}`}
-                onClick={() => setActiveItem(item.name)}
+              <Link
+                to={item.path}
+                className={`sidebar-item w-full flex items-center ${pathname === item.path ? 'active' : ''}`}
               >
                 <item.icon size={18} />
                 {isOpen && <span>{item.name}</span>}
-              </button>
+              </Link>
             </li>
           ))}
         </ul>
