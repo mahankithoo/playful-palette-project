@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/table';
 import { Plus, Search } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
+import { useNavigate } from 'react-router-dom';
 import NoticeFilters from '@/components/notices/NoticeFilters';
 import NoticeCategoryFilter from '@/components/notices/NoticeCategoryFilter';
 import NoticeCard from '@/components/notices/NoticeCard';
@@ -30,6 +31,7 @@ interface Notice {
 const Notices: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState<string>('all');
+  const navigate = useNavigate();
 
   // Sample notices data
   const notices: Notice[] = [
@@ -70,6 +72,11 @@ const Notices: React.FC = () => {
     return matchesSearch && matchesCategory;
   });
 
+  const handleAddNotice = () => {
+    // In a real app, this would navigate to a form to add a new notice
+    console.log("Add new notice clicked");
+  };
+
   return (
     <Layout>
       <div className="flex flex-col space-y-6">
@@ -90,7 +97,7 @@ const Notices: React.FC = () => {
           </div>
           
           <div className="flex items-center gap-2">
-            <Button className="ml-auto">
+            <Button className="ml-auto" onClick={handleAddNotice}>
               <Plus className="h-4 w-4 mr-2" />
               Add Notice
             </Button>
@@ -100,9 +107,15 @@ const Notices: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-4">
           <div className="lg:col-span-3">
             <div className="space-y-4">
-              {filteredNotices.map((notice) => (
-                <NoticeCard key={notice.id} notice={notice} />
-              ))}
+              {filteredNotices.length > 0 ? (
+                filteredNotices.map((notice) => (
+                  <NoticeCard key={notice.id} notice={notice} />
+                ))
+              ) : (
+                <div className="text-center p-8 border rounded-lg">
+                  <p className="text-muted-foreground">No notices found matching your criteria.</p>
+                </div>
+              )}
             </div>
           </div>
           

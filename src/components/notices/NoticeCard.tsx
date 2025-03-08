@@ -2,6 +2,7 @@
 import React from 'react';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { useNavigate } from 'react-router-dom';
 
 interface Notice {
   id: number;
@@ -18,6 +19,8 @@ interface NoticeCardProps {
 }
 
 const NoticeCard: React.FC<NoticeCardProps> = ({ notice }) => {
+  const navigate = useNavigate();
+  
   // Format the date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
@@ -42,6 +45,10 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice }) => {
     }
   };
 
+  const handleViewNotice = () => {
+    navigate(`/notices/${notice.id}`);
+  };
+
   return (
     <div className="border rounded-lg overflow-hidden transition-all hover:shadow-md">
       <div className="p-5">
@@ -62,11 +69,16 @@ const NoticeCard: React.FC<NoticeCardProps> = ({ notice }) => {
                 ? `${notice.description.substring(0, 150)}...` 
                 : notice.description}
               {notice.description.length > 150 && (
-                <Button variant="link" className="px-0 h-auto">Read more</Button>
+                <Button variant="link" className="px-0 h-auto" onClick={handleViewNotice}>Read more</Button>
               )}
             </p>
-            <div className="text-sm text-muted-foreground">
-              Posted by: {notice.author}
+            <div className="flex justify-between items-center">
+              <div className="text-sm text-muted-foreground">
+                Posted by: {notice.author}
+              </div>
+              <Button variant="outline" size="sm" onClick={handleViewNotice}>
+                View Details
+              </Button>
             </div>
           </div>
           
