@@ -8,28 +8,17 @@ import { useNavigate } from 'react-router-dom';
 const AttendanceControls: React.FC = () => {
   const [selectedClass, setSelectedClass] = useState<string>("");
   const [selectedSection, setSelectedSection] = useState<string>("");
-  const [selectedSubject, setSelectedSubject] = useState<string>("");
   const navigate = useNavigate();
   
   const classes = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"];
   const sections = ["A", "B", "C", "D"];
-  const subjects = [
-    "Mathematics", 
-    "English", 
-    "Science", 
-    "Social Studies", 
-    "Computer Science", 
-    "Physical Education", 
-    "Art"
-  ];
   
   const handleTakeAttendance = () => {
     navigate('/attendance/sheet', { 
       state: { 
         type: 'student',
         class: selectedClass, 
-        section: selectedSection,
-        subject: selectedSubject
+        section: selectedSection
       } 
     });
   };
@@ -63,17 +52,6 @@ const AttendanceControls: React.FC = () => {
           <SelectContent>
             {sections.map(section => (
               <SelectItem key={section} value={section}>Section {section}</SelectItem>
-            ))}
-          </SelectContent>
-        </Select>
-        
-        <Select value={selectedSubject} onValueChange={setSelectedSubject}>
-          <SelectTrigger className="min-w-[140px]">
-            <SelectValue placeholder="Select Subject" />
-          </SelectTrigger>
-          <SelectContent>
-            {subjects.map(subject => (
-              <SelectItem key={subject} value={subject}>{subject}</SelectItem>
             ))}
           </SelectContent>
         </Select>

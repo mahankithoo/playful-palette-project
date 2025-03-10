@@ -117,7 +117,7 @@ const StudentAttendanceSheet: React.FC<StudentAttendanceSheetProps> = ({ classIn
               className="border-amber-500 text-amber-500 hover:bg-amber-50"
               onClick={() => markAllStatus('L')}
             >
-              Mark all late
+              Mark all leave
             </Button>
           </div>
           
@@ -164,7 +164,7 @@ const StudentAttendanceSheet: React.FC<StudentAttendanceSheetProps> = ({ classIn
                 {filteredStudents
                   .filter(student => student.section === section)
                   .map(student => (
-                    <div key={student.id} className="bg-white rounded-lg shadow-sm p-4 flex flex-col items-center">
+                    <div key={student.id} className="bg-white rounded-lg shadow-md p-4 flex flex-col items-center">
                       <div className="mb-2">
                         <Avatar className="h-20 w-20 border">
                           <img src={student.avatar} alt={student.name} />

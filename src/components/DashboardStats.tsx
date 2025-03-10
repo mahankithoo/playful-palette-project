@@ -5,15 +5,15 @@ import { Users, UserCog, UserX, UserMinus } from 'lucide-react';
 const DashboardStats: React.FC = () => {
   const stats = [
     {
-      title: 'Total Students',
-      value: '10,000',
+      title: 'Total Present Students',
+      value: '9,750',
       icon: Users,
       color: 'bg-blue-50 text-blue-500',
       growth: '+3.5%',
     },
     {
-      title: 'Total Teachers',
-      value: '2,000',
+      title: 'Total Present Teachers',
+      value: '1,975',
       icon: UserCog,
       color: 'bg-green-50 text-green-500',
       growth: '+2.1%',

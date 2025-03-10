@@ -118,7 +118,7 @@ const TeacherAttendanceSheet: React.FC = () => {
               className="border-amber-500 text-amber-500 hover:bg-amber-50"
               onClick={() => markAllStatus('L')}
             >
-              Mark all late
+              Mark all leave
             </Button>
           </div>
           
@@ -159,7 +159,7 @@ const TeacherAttendanceSheet: React.FC = () => {
         <TabsContent value="grid" className="mt-0">
           <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
             {filteredTeachers.map(teacher => (
-              <div key={teacher.id} className="bg-white rounded-lg shadow-sm p-4 flex flex-col items-center">
+              <div key={teacher.id} className="bg-white rounded-lg shadow-md p-4 flex flex-col items-center">
                 <div className="mb-2">
                   <Avatar className="h-20 w-20 border">
                     <img src={teacher.avatar} alt={teacher.name} />

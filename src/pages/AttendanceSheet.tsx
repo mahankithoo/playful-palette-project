@@ -9,6 +9,9 @@ import TeacherAttendanceSheet from '@/components/attendance/TeacherAttendanceShe
 import { Helmet } from 'react-helmet';
 import { useToast } from '@/hooks/use-toast';
 import { format } from 'date-fns';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { Calendar as CalendarComponent } from '@/components/ui/calendar';
+import { cn } from '@/lib/utils';
 
 const AttendanceSheet: React.FC = () => {
   const location = useLocation();
@@ -16,12 +19,12 @@ const AttendanceSheet: React.FC = () => {
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
   const [currentDate, setCurrentDate] = useState(new Date());
+  const [calendarOpen, setCalendarOpen] = useState(false);
   
   // Check if we're showing teacher or student attendance
   const isTeacherAttendance = location.state?.type === 'teacher';
   const classInfo = location.state?.class;
   const sectionInfo = location.state?.section;
-  const subjectInfo = location.state?.subject;
   
   // Redirect if no class/section is selected for student attendance
   useEffect(() => {
@@ -42,6 +45,13 @@ const AttendanceSheet: React.FC = () => {
       });
       navigate('/attendance');
     }, 1500);
+  };
+
+  const handleDateSelect = (date: Date | undefined) => {
+    if (date) {
+      setCurrentDate(date);
+      setCalendarOpen(false);
+    }
   };
   
   return (
@@ -69,21 +79,28 @@ const AttendanceSheet: React.FC = () => {
                 ? "Teacher's Attendance" 
                 : `Class ${classInfo} Section ${sectionInfo} Attendance`}
             </h1>
-            
-            {subjectInfo && !isTeacherAttendance && (
-              <span className="text-sm font-medium bg-secondary px-3 py-1 rounded-full">
-                {subjectInfo}
-              </span>
-            )}
           </div>
           
           <div className="flex items-center gap-4 mt-4 sm:mt-0">
-            <div className="flex items-center bg-muted/30 px-3 py-1.5 rounded-lg">
-              <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
-              <span className="text-sm font-medium">
-                {format(currentDate, "dd MMM yyyy")}
-              </span>
-            </div>
+            <Popover open={calendarOpen} onOpenChange={setCalendarOpen}>
+              <PopoverTrigger asChild>
+                <div className="flex items-center bg-muted/30 px-3 py-1.5 rounded-lg cursor-pointer">
+                  <Calendar className="h-4 w-4 mr-2 text-muted-foreground" />
+                  <span className="text-sm font-medium">
+                    {format(currentDate, "dd MMM yyyy")}
+                  </span>
+                </div>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-0" align="end">
+                <CalendarComponent
+                  mode="single"
+                  selected={currentDate}
+                  onSelect={handleDateSelect}
+                  initialFocus
+                  className={cn("p-3 pointer-events-auto")}
+                />
+              </PopoverContent>
+            </Popover>
             
             <Button onClick={handleSave} disabled={isLoading} className="bg-indigo-600 hover:bg-indigo-700">
               {isLoading ? (
