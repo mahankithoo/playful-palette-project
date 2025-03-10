@@ -68,7 +68,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, setIsOpen }) => {
             <li key={item.name}>
               <Link
                 to={item.path}
-                className={`sidebar-item w-full flex items-center ${pathname === item.path ? 'active' : ''}`}
+                className={`sidebar-item w-full flex items-center ${pathname.startsWith(item.path) ? 'active' : ''}`}
               >
                 <item.icon size={18} />
                 {isOpen && <span>{item.name}</span>}

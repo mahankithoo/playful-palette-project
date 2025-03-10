@@ -1,10 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 const AttendanceChart: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [data, setData] = useState<any[]>([]);
+  const [selectedTime, setSelectedTime] = useState('This week');
+  const [selectedClass, setSelectedClass] = useState('All');
   
   // Simulate data loading
   useEffect(() => {
@@ -24,19 +27,52 @@ const AttendanceChart: React.FC = () => {
   }, []);
   
   return (
-    <div className="stats-card h-full overflow-hidden animate-slide-up" style={{ animationDelay: '0.4s' }}>
+    <div className="h-full overflow-hidden">
       <div className="flex items-center justify-between mb-4">
         <h3 className="text-base font-semibold">Attendance</h3>
         
-        <div className="flex items-center gap-4">
-          <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded-sm bg-chart-blue"></div>
-            <span className="text-xs text-muted-foreground">Present</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <div className="w-3 h-3 rounded-sm bg-chart-red"></div>
-            <span className="text-xs text-muted-foreground">Absent</span>
-          </div>
+        <div className="flex items-center gap-2">
+          <Select value={selectedTime} onValueChange={setSelectedTime}>
+            <SelectTrigger className="h-8 text-xs">
+              <SelectValue placeholder="This week" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="This week">This week</SelectItem>
+              <SelectItem value="Last week">Last week</SelectItem>
+              <SelectItem value="This month">This month</SelectItem>
+              <SelectItem value="Last month">Last month</SelectItem>
+            </SelectContent>
+          </Select>
+          
+          <Select value={selectedClass} onValueChange={setSelectedClass}>
+            <SelectTrigger className="h-8 text-xs">
+              <SelectValue placeholder="Class" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="All">All</SelectItem>
+              <SelectItem value="1">Class 1</SelectItem>
+              <SelectItem value="2">Class 2</SelectItem>
+              <SelectItem value="3">Class 3</SelectItem>
+              <SelectItem value="4">Class 4</SelectItem>
+              <SelectItem value="5">Class 5</SelectItem>
+              <SelectItem value="6">Class 6</SelectItem>
+              <SelectItem value="7">Class 7</SelectItem>
+              <SelectItem value="8">Class 8</SelectItem>
+              <SelectItem value="9">Class 9</SelectItem>
+              <SelectItem value="10">Class 10</SelectItem>
+            </SelectContent>
+          </Select>
+        </div>
+      </div>
+      
+      <div className="flex items-center gap-6 mb-6">
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-sm bg-primary"></div>
+          <span className="text-xs text-muted-foreground">Total Present</span>
+        </div>
+        <div className="flex items-center gap-2">
+          <div className="w-3 h-3 rounded-sm bg-destructive/70"></div>
+          <span className="text-xs text-muted-foreground">Total Absent</span>
         </div>
       </div>
       
