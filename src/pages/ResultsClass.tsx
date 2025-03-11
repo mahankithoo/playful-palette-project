@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
 import { 
   Table, 
   TableBody, 
@@ -16,14 +18,23 @@ import {
   Download,
   Upload,
   Edit,
-  Trash
+  Trash,
+  Search
 } from 'lucide-react';
+import { TablePagination } from '@/components/ui/table-pagination';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { toast } from "sonner";
 
 const ResultsClass: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { className, section } = location.state || { className: '8', section: 'B' };
+  
+  const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [allSelected, setAllSelected] = useState(false);
   
   // Mock subjects
   const subjects = [
@@ -104,6 +115,31 @@ const ResultsClass: React.FC = () => {
     },
   ];
 
+  const totalItems = students.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+  const handleSelectAll = (checked: boolean) => {
+    setAllSelected(checked);
+    if (checked) {
+      setSelectedRows(students.map(student => student.id));
+    } else {
+      setSelectedRows([]);
+    }
+  };
+
+  const handleSelectRow = (id: string, checked: boolean) => {
+    if (checked) {
+      setSelectedRows([...selectedRows, id]);
+    } else {
+      setSelectedRows(selectedRows.filter(rowId => rowId !== id));
+    }
+  };
+
+  const handleDeleteSelected = () => {
+    toast.success(`Deleted ${selectedRows.length} items successfully`);
+    setSelectedRows([]);
+  };
+
   return (
     <Layout>
       <div className="space-y-6 animate-fade-in">
@@ -129,10 +165,23 @@ const ResultsClass: React.FC = () => {
         </div>
         
         <div className="flex justify-between gap-4 items-center">
-          <div className="text-sm text-muted-foreground">
-            Showing results for {students.length} students
+          <div className="relative w-64">
+            <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="Search students..."
+              className="pl-8"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
           </div>
+
           <div className="flex gap-2">
+            {selectedRows.length > 0 && (
+              <Button variant="outline" className="flex items-center gap-1" onClick={handleDeleteSelected}>
+                <Trash className="h-4 w-4" />
+                Delete ({selectedRows.length})
+              </Button>
+            )}
             <Button size="sm" variant="outline" className="flex gap-1">
               <Upload className="h-4 w-4" />
               Import
@@ -144,10 +193,17 @@ const ResultsClass: React.FC = () => {
           </div>
         </div>
         
-        <div className="border rounded-md overflow-x-auto">
+        <div className="border rounded-md overflow-x-auto shadow">
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead className="w-12">
+                  <Checkbox 
+                    checked={allSelected}
+                    onCheckedChange={handleSelectAll}
+                    aria-label="Select all"
+                  />
+                </TableHead>
                 <TableHead className="w-12">UID</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead className="text-center">Roll No</TableHead>
@@ -164,7 +220,14 @@ const ResultsClass: React.FC = () => {
             </TableHeader>
             <TableBody>
               {students.map((student) => (
-                <TableRow key={student.id}>
+                <TableRow key={student.id} className="hover:bg-muted/50 transition-colors">
+                  <TableCell>
+                    <Checkbox 
+                      checked={selectedRows.includes(student.id)}
+                      onCheckedChange={(checked) => handleSelectRow(student.id, checked as boolean)}
+                      aria-label={`Select row ${student.id}`}
+                    />
+                  </TableCell>
                   <TableCell className="font-medium">{student.id}</TableCell>
                   <TableCell>{student.name}</TableCell>
                   <TableCell className="text-center">{student.rollNo}</TableCell>
@@ -189,6 +252,16 @@ const ResultsClass: React.FC = () => {
             </TableBody>
           </Table>
         </div>
+        
+        <TablePagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={totalItems}
+          selectedItems={selectedRows.length}
+          itemsPerPage={itemsPerPage}
+          onPageChange={setCurrentPage}
+          onItemsPerPageChange={setItemsPerPage}
+        />
       </div>
     </Layout>
   );

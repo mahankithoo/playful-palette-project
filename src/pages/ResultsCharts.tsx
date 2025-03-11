@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft } from 'lucide-react';
@@ -63,6 +63,18 @@ const ResultsCharts: React.FC = () => {
     { id: 5, name: 'Kathryn Watson', class: 'Class 9', section: 'A', gpa: '3.75', avatar: 'https://randomuser.me/api/portraits/women/56.jpg' }
   ];
 
+  const handleClassChange = (value: string) => {
+    setSelectedClass(value);
+  };
+
+  const handleSectionChange = (value: string) => {
+    setSelectedSection(value);
+  };
+
+  const handleTermChange = (value: string) => {
+    setSelectedTerm(value);
+  };
+
   return (
     <Layout>
       <div className="space-y-6 animate-fade-in">
@@ -77,10 +89,17 @@ const ResultsCharts: React.FC = () => {
               <ChevronLeft className="h-4 w-4" />
               Back
             </Button>
-            <h2 className="text-xl font-bold tracking-tight">Results Analysis</h2>
+            <h2 className="text-xl font-bold tracking-tight">
+              Results Analysis 
+              {selectedClass && selectedSection && (
+                <span className="ml-2 text-muted-foreground">
+                  - Class {selectedClass} Section {selectedSection} ({selectedTerm}st Term)
+                </span>
+              )}
+            </h2>
           </div>
           <div className="flex gap-3">
-            <Select value={selectedClass} onValueChange={setSelectedClass}>
+            <Select value={selectedClass} onValueChange={handleClassChange}>
               <SelectTrigger className="w-[150px]">
                 <SelectValue placeholder="Select Class" />
               </SelectTrigger>
@@ -93,7 +112,7 @@ const ResultsCharts: React.FC = () => {
                 <SelectItem value="6">Class 6</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={selectedSection} onValueChange={setSelectedSection}>
+            <Select value={selectedSection} onValueChange={handleSectionChange}>
               <SelectTrigger className="w-[150px]">
                 <SelectValue placeholder="Select Section" />
               </SelectTrigger>
@@ -105,7 +124,7 @@ const ResultsCharts: React.FC = () => {
                 <SelectItem value="D">Section D</SelectItem>
               </SelectContent>
             </Select>
-            <Select value={selectedTerm} onValueChange={setSelectedTerm}>
+            <Select value={selectedTerm} onValueChange={handleTermChange}>
               <SelectTrigger className="w-[150px]">
                 <SelectValue placeholder="Select Term" />
               </SelectTrigger>
@@ -120,7 +139,7 @@ const ResultsCharts: React.FC = () => {
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <div className="border rounded-lg p-4 bg-card">
+          <div className="border rounded-lg p-4 bg-card shadow">
             <h3 className="font-medium text-lg mb-4">Pass and Fail</h3>
             <ResponsiveContainer width="100%" height={300}>
               <BarChart data={passFailData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
@@ -135,7 +154,7 @@ const ResultsCharts: React.FC = () => {
             </ResponsiveContainer>
           </div>
           
-          <div className="border rounded-lg p-4 bg-card">
+          <div className="border rounded-lg p-4 bg-card shadow">
             <h3 className="font-medium text-lg mb-4">No of students vs. GPA</h3>
             <ResponsiveContainer width="100%" height={300}>
               <PieChart>
@@ -160,7 +179,7 @@ const ResultsCharts: React.FC = () => {
           </div>
         </div>
         
-        <div className="border rounded-lg p-4 bg-card">
+        <div className="border rounded-lg p-4 bg-card shadow">
           <h3 className="font-medium text-lg mb-4">Average Mark, Highest Mark and Lowest Mark</h3>
           <ResponsiveContainer width="100%" height={400}>
             <LineChart data={marksData} margin={{ top: 20, right: 30, left: 20, bottom: 30 }}>
@@ -176,11 +195,11 @@ const ResultsCharts: React.FC = () => {
           </ResponsiveContainer>
         </div>
         
-        <div className="border rounded-lg p-4 bg-card">
+        <div className="border rounded-lg p-4 bg-card shadow">
           <h3 className="font-medium text-lg mb-4">Top Students</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
             {topStudents.map(student => (
-              <div key={student.id} className="flex flex-col items-center p-4 border rounded-lg bg-background">
+              <div key={student.id} className="flex flex-col items-center p-4 border rounded-lg bg-background shadow hover:shadow-md transition-shadow">
                 <img 
                   src={student.avatar} 
                   alt={student.name} 

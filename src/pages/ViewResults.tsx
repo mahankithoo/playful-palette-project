@@ -2,6 +2,8 @@
 import React, { useState } from 'react';
 import Layout from '@/components/Layout';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
+import { Input } from '@/components/ui/input';
 import { 
   Table, 
   TableBody, 
@@ -13,15 +15,26 @@ import {
 import { 
   ChevronLeft,
   Download,
-  CheckCircle
+  CheckCircle,
+  Search
 } from 'lucide-react';
+import { TablePagination } from '@/components/ui/table-pagination';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Badge } from '@/components/ui/badge';
+import PublishConfirmDialog from '@/components/results/PublishConfirmDialog';
+import { toast } from "sonner";
 
 const ViewResults: React.FC = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { className = '8', section = 'B', status = 'Under Review' } = location.state || {};
+  
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(10);
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [allSelected, setAllSelected] = useState(false);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [publishDialogOpen, setPublishDialogOpen] = useState(false);
   
   // Mock subjects
   const subjects = [
@@ -102,6 +115,9 @@ const ViewResults: React.FC = () => {
     },
   ];
 
+  const totalItems = students.length;
+  const totalPages = Math.ceil(totalItems / itemsPerPage);
+
   const getStatusColor = (status: string) => {
     switch(status) {
       case 'Pending':
@@ -115,6 +131,33 @@ const ViewResults: React.FC = () => {
       default:
         return 'bg-gray-100 text-gray-800';
     }
+  };
+
+  const handleSelectAll = (checked: boolean) => {
+    setAllSelected(checked);
+    if (checked) {
+      setSelectedRows(students.map(student => student.id));
+    } else {
+      setSelectedRows([]);
+    }
+  };
+
+  const handleSelectRow = (id: string, checked: boolean) => {
+    if (checked) {
+      setSelectedRows([...selectedRows, id]);
+    } else {
+      setSelectedRows(selectedRows.filter(rowId => rowId !== id));
+    }
+  };
+
+  const handlePublishResult = () => {
+    setPublishDialogOpen(true);
+  };
+
+  const confirmPublish = () => {
+    toast.success(`Results for Class ${className} Section ${section} published successfully`);
+    setPublishDialogOpen(false);
+    navigate('/results/publish');
   };
 
   return (
@@ -137,12 +180,21 @@ const ViewResults: React.FC = () => {
             </Badge>
           </div>
           <div className="flex gap-3">
+            <div className="relative w-64">
+              <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+              <Input
+                placeholder="Search students..."
+                className="pl-8"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+              />
+            </div>
             <Button variant="outline" className="flex items-center gap-1">
               <Download className="h-4 w-4" />
               Export
             </Button>
             {status !== 'Published' && (
-              <Button className="flex items-center gap-1">
+              <Button className="flex items-center gap-1" onClick={handlePublishResult}>
                 <CheckCircle className="h-4 w-4" />
                 Publish Result
               </Button>
@@ -150,10 +202,17 @@ const ViewResults: React.FC = () => {
           </div>
         </div>
         
-        <div className="border rounded-md overflow-x-auto">
+        <div className="border rounded-md overflow-x-auto shadow">
           <Table>
             <TableHeader>
               <TableRow>
+                <TableHead className="w-12">
+                  <Checkbox 
+                    checked={allSelected}
+                    onCheckedChange={handleSelectAll}
+                    aria-label="Select all"
+                  />
+                </TableHead>
                 <TableHead className="w-12">UID</TableHead>
                 <TableHead>Name</TableHead>
                 <TableHead className="text-center">Roll No</TableHead>
@@ -170,7 +229,14 @@ const ViewResults: React.FC = () => {
             </TableHeader>
             <TableBody>
               {students.map((student) => (
-                <TableRow key={student.id}>
+                <TableRow key={student.id} className="hover:bg-muted/50 transition-colors">
+                  <TableCell>
+                    <Checkbox 
+                      checked={selectedRows.includes(student.id)}
+                      onCheckedChange={(checked) => handleSelectRow(student.id, checked as boolean)}
+                      aria-label={`Select row ${student.id}`}
+                    />
+                  </TableCell>
                   <TableCell className="font-medium">{student.id}</TableCell>
                   <TableCell>{student.name}</TableCell>
                   <TableCell className="text-center">{student.rollNo}</TableCell>
@@ -190,6 +256,24 @@ const ViewResults: React.FC = () => {
             </TableBody>
           </Table>
         </div>
+        
+        <TablePagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          totalItems={totalItems}
+          selectedItems={selectedRows.length}
+          itemsPerPage={itemsPerPage}
+          onPageChange={setCurrentPage}
+          onItemsPerPageChange={setItemsPerPage}
+        />
+
+        <PublishConfirmDialog
+          isOpen={publishDialogOpen}
+          onClose={() => setPublishDialogOpen(false)}
+          onConfirm={confirmPublish}
+          className={className}
+          section={section}
+        />
       </div>
     </Layout>
   );
