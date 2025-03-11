@@ -231,7 +231,7 @@ const Results: React.FC = () => {
             <PaginationItem>
               <PaginationLink
                 onClick={() => setCurrentPage(1)}
-                disabled={currentPage === 1}
+                className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
               >
                 <ChevronsLeft className="h-4 w-4" />
               </PaginationLink>
@@ -240,7 +240,7 @@ const Results: React.FC = () => {
             <PaginationItem>
               <PaginationLink
                 onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
-                disabled={currentPage === 1}
+                className={currentPage === 1 ? "pointer-events-none opacity-50" : ""}
               >
                 <ChevronLeft className="h-4 w-4" />
               </PaginationLink>
@@ -266,7 +266,7 @@ const Results: React.FC = () => {
             <PaginationItem>
               <PaginationLink
                 onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
-                disabled={currentPage === totalPages}
+                className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
               >
                 <ChevronRight className="h-4 w-4" />
               </PaginationLink>
@@ -275,7 +275,7 @@ const Results: React.FC = () => {
             <PaginationItem>
               <PaginationLink
                 onClick={() => setCurrentPage(totalPages)}
-                disabled={currentPage === totalPages}
+                className={currentPage === totalPages ? "pointer-events-none opacity-50" : ""}
               >
                 <ChevronsRight className="h-4 w-4" />
               </PaginationLink>
