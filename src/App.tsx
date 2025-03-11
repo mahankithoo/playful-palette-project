@@ -14,6 +14,11 @@ import NoticeDetail from "./pages/NoticeDetail";
 import Events from "./pages/Events";
 import Attendance from "./pages/Attendance";
 import AttendanceSheet from "./pages/AttendanceSheet";
+import Results from "./pages/Results";
+import ResultsClass from "./pages/ResultsClass";
+import ResultsCharts from "./pages/ResultsCharts";
+import PublishResults from "./pages/PublishResults";
+import ViewResults from "./pages/ViewResults";
 import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
@@ -35,6 +40,11 @@ const App = () => (
           <Route path="/events" element={<Events />} />
           <Route path="/attendance" element={<Attendance />} />
           <Route path="/attendance/sheet" element={<AttendanceSheet />} />
+          <Route path="/results" element={<Results />} />
+          <Route path="/results/class" element={<ResultsClass />} />
+          <Route path="/results/charts" element={<ResultsCharts />} />
+          <Route path="/results/publish" element={<PublishResults />} />
+          <Route path="/results/view" element={<ViewResults />} />
           {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
           <Route path="*" element={<NotFound />} />
         </Routes>
